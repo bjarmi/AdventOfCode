@@ -14,7 +14,7 @@ fn main() {
 }
 
 fn count_safe_reports(reports: &Vec<Vec<i32>>) -> u32 {
-    let mut count = 0;
+    let mut count: u32 = 0;
 
     for report in reports {
         if is_safe_report(report) {
@@ -26,35 +26,27 @@ fn count_safe_reports(reports: &Vec<Vec<i32>>) -> u32 {
 }
 
 fn is_safe_report(report: &[i32]) -> bool {
-    let mut found_different_levels = false;
-    let mut is_increasing = true;
+    let mut current_level: &i32 = &report[0];
 
-    let current_level = report[0];
+    let is_increasing: bool = *current_level < report[1];
+
     for next_level in report.iter().skip(1) {
-        if current_level == *next_level {
-            continue;
-        }
+        let first_level: &i32;
+        let second_level: &i32;
 
-        if !found_different_levels {
-            found_different_levels = true;
-            is_increasing = current_level < *next_level;
-        }
-
-        let first_level = if is_increasing {
-            *next_level
+        if is_increasing {
+            first_level = next_level;
+            second_level = current_level;
         } else {
-            current_level
-        };
-        let second_level = if is_increasing {
-            current_level
-        } else {
-            *next_level
+            first_level = current_level;
+            second_level = next_level;
         };
 
-        let difference = first_level - second_level;
-        if !(0..=3).contains(&difference) {
+        let difference: i32 = first_level - second_level;
+        if !(1..=3).contains(&difference) {
             return false;
         }
+        current_level = next_level
     }
 
     true
