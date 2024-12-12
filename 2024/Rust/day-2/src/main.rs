@@ -17,7 +17,7 @@ fn count_safe_reports(reports: &Vec<Vec<i32>>) -> u32 {
     let mut count: u32 = 0;
 
     for report in reports {
-        if is_safe_report(report) {
+        if brute_force_is_safe_report(report) {
             count += 1;
         }
     }
@@ -25,6 +25,7 @@ fn count_safe_reports(reports: &Vec<Vec<i32>>) -> u32 {
     count
 }
 
+// Part 1
 fn is_safe_report(report: &[i32]) -> bool {
     let mut current_level: &i32 = &report[0];
 
@@ -50,6 +51,30 @@ fn is_safe_report(report: &[i32]) -> bool {
     }
 
     true
+}
+
+// Part 2
+fn brute_force_is_safe_report(report: &[i32]) -> bool {
+    if is_safe_report(report) {
+        return true;
+    }
+
+    let report_length = report.len();
+    for idx in 0..report_length {
+        let mut new_report: Vec<i32> = Vec::new();
+        if idx > 0 {
+            new_report.extend_from_slice(&report[0..idx]);
+        }
+        if idx < report_length - 1 {
+            new_report.extend_from_slice(&report[(idx + 1)..]);
+        }
+
+        if is_safe_report(&new_report) {
+            return true;
+        }
+    }
+
+    false
 }
 
 fn extract_reports() -> io::Result<Vec<Vec<i32>>> {
